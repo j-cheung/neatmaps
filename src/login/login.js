@@ -1,4 +1,5 @@
 import React from 'react'
+import "./login.css"
 
 const LoginTitle = () => {
 	return (
@@ -8,8 +9,15 @@ const LoginTitle = () => {
 
 class LoginForm extends React.Component {
 
-	handleSubmit = () => {
-
+	handleSubmit = (event) => {
+		//validate, verify
+		event.PreventDefault();
+		//........
+		//if success
+		//launch app
+		this.props.history.push({
+			pathname:"/home"
+		})
 	}
 
 	render () {

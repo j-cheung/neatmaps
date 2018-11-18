@@ -4,8 +4,6 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import Routes from './routes';
 import * as serviceWorker from './serviceWorker';
 
-require('./login/login.css')
-
 ReactDOM.render(
 	<Router>
 		<Routes/>
