@@ -37,6 +37,27 @@ class GMap extends React.Component {
 	}
 }
 
+class HomeOptions extends React.Component {
+	render() {
+		return (
+			<div className="homeOptionsBar">
+				<div className="homeOptionsButton">Upload</div>
+				<LoadPrevFiles/>
+				<div className="homeOptionsButton">Logout</div>
+			</div>
+		)
+	}
+}
+
+//load previously uploaded files if available
+class LoadPrevFiles extends React.Component {
+	render() {
+		return (
+			<div></div>
+		)
+	}
+}
+
 export default class Home extends React.Component {
 	render() {
 		return (
@@ -44,13 +65,13 @@ export default class Home extends React.Component {
 				<GMap
 					gmapId="gmap0"
 					options={{
-						// center: {lat: 39.8283, lng: -98.5795},
 						center: {lat: 44.5802, lng: -103.4617},
 						zoom: 4
 					}}
 					onMapLoad={map => {}}
 					apiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}
 				/>
+				<HomeOptions/>
 			</div>
 		)
 	}
