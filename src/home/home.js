@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import "./home.css"
 
 //https://cuneyt.aliustaoglu.biz/en/using-google-maps-in-react-without-custom-libraries/
@@ -41,7 +42,9 @@ class HomeOptions extends React.Component {
 	render() {
 		return (
 			<div className="homeOptionsBar">
-				<div className="homeOptionsButton">Upload</div>
+				<Link to="/upload" className="homeOptionsButton">
+					Upload
+				</Link>
 				<LoadPrevFiles/>
 				<div className="homeOptionsButton">Logout</div>
 			</div>
