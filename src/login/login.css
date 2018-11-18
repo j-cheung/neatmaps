@@ -15,3 +15,23 @@
 	color: #fff;
 	font-family: "Helvetica Neue";
 }
+
+.loginForm {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width: 30%;
+}
+
+.loginField {
+	width: 100%;
+	height: 30px;
+}
+
+.loginSubmit {
+	position: relative;
+	top: 2vh;
+	width: 50%;
+	height: 4vh;
+}
