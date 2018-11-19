@@ -2,7 +2,7 @@ const express = require('express')
 const fs = require('fs')
 const app = express()
 const port = process.env.PORT || 5000
-const FILESTORE_PATH = "filestore/"
+const FILESTORE_PATH = "./filestore/"
 
 app.listen(port, () => console.log('Listening on port ' + port))
 
@@ -13,13 +13,15 @@ app.post('/api/upload_csv', (req,res) => {
 	filename = "file" + ".csv"
 	filePath = FILESTORE_PATH + filename
 	csvData = req.body.data
+	let writeStream = fs.createWriteStream(filePath)
 	try {
-		let writeStream = fs.createWriteStream(filename)
-		csvData.forEach((row) => {
-			const rowString = row.join(',') + '\n'
-			writeStream.write(rowString)
+		writeStream.once('open', () => {
+			csvData.forEach((row) => {
+				const rowString = row.join(',') + '\n'
+				writeStream.write(rowString)
+			})
+			writeStream.end();
 		})
-		writeStream.end();
 	} catch(err) {
 		return res.sendStatus(500).json(err)
 	} 

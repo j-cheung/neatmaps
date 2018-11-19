@@ -52,7 +52,6 @@ class LoadPrevFiles extends React.Component {
 		fetch('/api/get_file_list')
 		.then(response => response.json())
 		.then(data => {
-				console.log(data)
 				this.setState({
 					fileList : data.fileList
 				})
@@ -106,13 +105,36 @@ export default class Home extends React.Component {
 		}
 	}
 
+	_getFileData = (filename) => {
+		console.log("get " + filename)
+		fetch('/api/get_file', {
+			method: 'POST',
+			headers: {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+				filename: filename
+			})
+		})
+		.then(response => response.json())
+		.then(data => {
+			console.log(data)
+		})
+	};
+
 	//add overlay
 	handleLoadFileClick = (filename) => {
 		//get file => array of locations
-		console.log(filename)
+		this.setState({
+			filename: filename
+		})
 	}
 
 	render() {
+		if(this.state.filename){
+			this._getFileData(this.state.filename)
+		}
 		return (
 			<div className="homeWrapper">
 				<GMap

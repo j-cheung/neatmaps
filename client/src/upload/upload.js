@@ -107,6 +107,7 @@ export default class Upload extends React.Component {
 		//validate selections
 		const columnHeaders = this.state.columnHeaders
 		const origArray = this.state.csvArray
+		const withHeaders = [columnHeaders].concat(origArray)
 		this.setState({
 			headersSelected: true
 		})
@@ -117,7 +118,7 @@ export default class Upload extends React.Component {
 				'Content-Type': 'application/json',
 			},
 			body: JSON.stringify({
-				data: [columnHeaders].concat(origArray)
+				data: withHeaders
 			})
 		})
 		.then(response => {
@@ -126,9 +127,8 @@ export default class Upload extends React.Component {
 	}
 
 	render() {
-
+/*
 		if(this.state.headersSelected){
-			console.log("downloadcsv")
 			return (
 				<div className="uploadWrapper">
 					<h1> UPLOAD FILE </h1>
@@ -141,7 +141,7 @@ export default class Upload extends React.Component {
 					<button onClick={this.handleSubmitChanges}>OK</button>
 				</div>
 			)
-		}
+		}*/
 
 		if(this.state.csvArray && this.state.csvArray.length > 0){
 			return (
