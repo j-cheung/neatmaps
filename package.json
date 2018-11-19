@@ -19,6 +19,7 @@
   "homepage": "https://github.com/j-cheung/neatmaps#readme",
   "dependencies": {
     "body-parser": "^1.18.3",
+    "csv2json": "^1.4.2",
     "express": "^4.16.4"
   }
 }

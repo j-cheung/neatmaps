@@ -120,8 +120,8 @@ export default class Upload extends React.Component {
 				data: [columnHeaders].concat(origArray)
 			})
 		})
-		.then(results => {
-			console.log(results)
+		.then(response => {
+			console.log(response)
 		})
 	}
 

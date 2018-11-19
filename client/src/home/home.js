@@ -38,6 +38,51 @@ class GMap extends React.Component {
 	}
 }
 
+
+//load previously uploaded files if available
+class LoadPrevFiles extends React.Component {
+	constructor(props){
+		super(props)
+		this.state = {
+			fileList : []
+		}
+	}
+
+	componentDidMount() {
+		fetch('/api/get_file_list')
+		.then(response => response.json())
+		.then(data => {
+				console.log(data)
+				this.setState({
+					fileList : data.fileList
+				})
+			}
+		)
+	}
+
+	render() {
+		if(this.state.fileList && this.state.fileList.length>0){
+			const fileList = this.state.fileList
+			return (
+				fileList.map(
+					(filename) => (
+						<button 
+							className="homeOptionsButton" 
+							key={filename}
+							onClick={(e) => 
+								this.props.handleLoadFileClick(filename)
+							}
+						>
+							{filename}
+						</button>
+					)
+				)
+			)
+		}
+		return null
+	}
+}
+
 class HomeOptions extends React.Component {
 	render() {
 		return (
@@ -45,23 +90,28 @@ class HomeOptions extends React.Component {
 				<Link to="/upload" className="homeOptionsButton">
 					Upload
 				</Link>
-				<LoadPrevFiles/>
+				<LoadPrevFiles handleLoadFileClick={this.props.handleLoadFileClick}/>
 				<div className="homeOptionsButton">Logout</div>
 			</div>
 		)
 	}
 }
 
-//load previously uploaded files if available
-class LoadPrevFiles extends React.Component {
-	render() {
-		return (
-			<div></div>
-		)
-	}
-}
-
 export default class Home extends React.Component {
+	constructor(props) {
+		super(props)
+		this.state = {
+			filename: null,
+			markers: null
+		}
+	}
+
+	//add overlay
+	handleLoadFileClick = (filename) => {
+		//get file => array of locations
+		console.log(filename)
+	}
+
 	render() {
 		return (
 			<div className="homeWrapper">
@@ -74,7 +124,7 @@ export default class Home extends React.Component {
 					onMapLoad={map => {}}
 					apiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}
 				/>
-				<HomeOptions/>
+				<HomeOptions handleLoadFileClick={this.handleLoadFileClick}/>
 			</div>
 		)
 	}
