@@ -1,6 +1,6 @@
 import React from 'react'
 import CSVReader from 'react-csv-reader'
-import { CSVLink } from 'react-csv'
+import { CSVLink, CSVDownload } from 'react-csv'
 import "./upload.css"
 
 class Reader extends React.Component {
@@ -129,6 +129,7 @@ export default class Upload extends React.Component {
 					<CSVLink headers={this.state.columnHeaders} data={this.state.csvArray} target="_self">
 						Download CSV
 					</CSVLink>
+					<CSVDownload headers={this.state.columnHeaders} data={this.state.csvArray} target="_blank" filename="data.csv"/>
 				</div>
 			)
 		}
