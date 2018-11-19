@@ -1,5 +1,6 @@
 import React from 'react'
 import CSVReader from 'react-csv-reader'
+import { CSVLink } from 'react-csv'
 import "./upload.css"
 
 class Reader extends React.Component {
@@ -22,7 +23,7 @@ class SelectColumnHeader extends React.Component {
 				<tr>
 					{indices.map(
 						(index)=>(
-							<td>
+							<td key={"column" + index}>
 								<select 
 									name="columnName" 
 									onChange={(e) => this.props.onChangeColumn(e,index)} 
@@ -56,12 +57,12 @@ class CSVTableView extends React.Component {
 				/>
 				<tbody>
 					{tableData.map(
-						(tableRow) => {
+						(tableRow, index0) => {
 							return(
-								<tr>
+								<tr key={index0}>
 									{tableRow.map(
-											(tableCell) => {
-												return (<td>{tableCell}</td>)
+											(tableCell, index1) => {
+												return (<td key={index0 + "." + index1}>{tableCell}</td>)
 											}
 									)}
 								</tr>
@@ -79,7 +80,8 @@ export default class Upload extends React.Component {
 		super(props)
 		this.state={
 			csvArray: [],
-			columnHeaders: Array(5).fill('')
+			columnHeaders: Array(5).fill(''),
+			headersSelected: false
 		}
 	}
 
@@ -103,14 +105,33 @@ export default class Upload extends React.Component {
 
 	handleSubmitChanges = () => {
 		//validate selections
-		const columnHeaders = [this.state.columnHeaders]
+		const columnHeaders = this.state.columnHeaders
 		const origArray = this.state.csvArray
-		const newArray = columnHeaders.concat(origArray)
-		
-		console.log(newArray)
+		this.setState({
+			headersSelected: true
+		})
 	}
 
 	render() {
+
+		if(this.state.headersSelected){
+			console.log("downloadcsv")
+			return (
+				<div className="uploadWrapper">
+					<h1> UPLOAD FILE </h1>
+					<Reader onFileLoaded={this.onFileLoaded}/>
+					<CSVTableView 
+						tableData={this.state.csvArray} 
+						columnHeaders={this.state.columnHeaders} 
+						onChangeColumn={this.onChangeColumn}
+					/>
+					<button onClick={this.handleSubmitChanges}>OK</button>
+					<CSVLink headers={this.state.columnHeaders} data={this.state.csvArray} target="_self">
+						Download CSV
+					</CSVLink>
+				</div>
+			)
+		}
 
 		if(this.state.csvArray && this.state.csvArray.length > 0){
 			return (
