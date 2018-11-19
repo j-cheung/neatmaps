@@ -110,6 +110,20 @@ export default class Upload extends React.Component {
 		this.setState({
 			headersSelected: true
 		})
+		fetch('/express_backend', {
+			method: 'POST',
+			headers: {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+				filename: "file",
+				data: [columnHeaders].concat(origArray)
+			})
+		})
+		.then(results => {
+			console.log(results)
+		})
 	}
 
 	render() {
@@ -126,10 +140,6 @@ export default class Upload extends React.Component {
 						onChangeColumn={this.onChangeColumn}
 					/>
 					<button onClick={this.handleSubmitChanges}>OK</button>
-					<CSVLink headers={this.state.columnHeaders} data={this.state.csvArray} target="_self">
-						Download CSV
-					</CSVLink>
-					<CSVDownload headers={this.state.columnHeaders} data={this.state.csvArray} target="_blank" filename="data.csv"/>
 				</div>
 			)
 		}
