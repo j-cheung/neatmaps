@@ -7,17 +7,24 @@ class GMap extends React.Component {
 	constructor(props) {
 		super(props)
 		this.onScriptLoad = this.onScriptLoad.bind(this)
+		this.state = {
+			gmap: null
+		}
 	}
 
 	onScriptLoad() {
 		const gmap = new window.google.maps.Map(
 			document.getElementById(this.props.gmapId),
-			this.props.options)
-		this.props.onMapLoad(gmap)
+			this.props.options
+		)
+		this.setState({
+			gmap: gmap
+		})
 	}
 
 	componentDidMount(){
-		if(!window.google) {
+		if(!window.google) { 
+		//if Google Maps API Script not loaded, add to page
 			var s = document.createElement('script')
 			s.type = 'text/javascript'
 			s.src = "https://maps.google.com/maps/api/js?key=" + this.props.apiKey;
@@ -29,6 +36,10 @@ class GMap extends React.Component {
 		} else {
 			this.onScriptLoad()
 		}
+	}
+
+	componentDidUpdate(){
+		this.props.onMapLoad(this.state.gmap)
 	}
 
 	render() {
@@ -101,12 +112,11 @@ export default class Home extends React.Component {
 		super(props)
 		this.state = {
 			filename: null,
-			markers: null
+			fileData: null
 		}
 	}
 
 	_getFileData = (filename) => {
-		console.log("get " + filename)
 		fetch('/api/get_file', {
 			method: 'POST',
 			headers: {
@@ -120,6 +130,9 @@ export default class Home extends React.Component {
 		.then(response => response.json())
 		.then(data => {
 			console.log(data)
+			this.setState({
+				fileData: data
+			})
 		})
 	};
 
@@ -129,12 +142,24 @@ export default class Home extends React.Component {
 		this.setState({
 			filename: filename
 		})
+		this._getFileData(filename)
+	};
+
+	showMarkers = (map) => {
+		const marker = new window.google.maps.Marker({
+			position: {lat: 44.5802, lng: -103.4617},
+			map: map
+		})
+	};
+
+	onMapLoad = (map) => {
+		if(this.state.fileData){
+			this.showMarkers(map)
+		}
 	}
 
 	render() {
-		if(this.state.filename){
-			this._getFileData(this.state.filename)
-		}
+		console.log("rerender")
 		return (
 			<div className="homeWrapper">
 				<GMap
@@ -143,7 +168,7 @@ export default class Home extends React.Component {
 						center: {lat: 44.5802, lng: -103.4617},
 						zoom: 4
 					}}
-					onMapLoad={map => {}}
+					onMapLoad={this.onMapLoad}
 					apiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}
 				/>
 				<HomeOptions handleLoadFileClick={this.handleLoadFileClick}/>
