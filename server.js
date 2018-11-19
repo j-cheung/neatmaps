@@ -1,17 +1,18 @@
 const express = require('express')
+const fs = require('fs')
 const app = express()
 const port = process.env.PORT || 5000
+const FILESTORE_PATH = "filestore/"
 
 app.listen(port, () => console.log('Listening on port ' + port))
 
 const bodyParser = require('body-parser')
 app.use(bodyParser.json())
 app.use(express.json())
-app.post('/express_backend', (req,res) => {
-	console.log(req.body)
-	filename = "filestore/" + req.body.filename + ".csv"
+app.post('/api/upload_csv', (req,res) => {
+	filename = "file" + ".csv"
+	filePath = FILESTORE_PATH + filename
 	csvData = req.body.data
-	const fs = require('fs')
 	try {
 		let writeStream = fs.createWriteStream(filename)
 		csvData.forEach((row) => {
@@ -22,5 +23,7 @@ app.post('/express_backend', (req,res) => {
 	} catch(err) {
 		return res.sendStatus(500).json(err)
 	} 
-	res.send({express: 'YOUR EXPRESS BACKEND IS CONNECTED TO REACT'})
+	res.send({
+		filename: filename
+	})
 })

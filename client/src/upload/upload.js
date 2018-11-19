@@ -110,14 +110,13 @@ export default class Upload extends React.Component {
 		this.setState({
 			headersSelected: true
 		})
-		fetch('/express_backend', {
+		fetch('/api/upload_csv', {
 			method: 'POST',
 			headers: {
 				'Accept': 'application/json',
 				'Content-Type': 'application/json',
 			},
 			body: JSON.stringify({
-				filename: "file",
 				data: [columnHeaders].concat(origArray)
 			})
 		})
