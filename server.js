@@ -16,9 +16,12 @@ const bodyParser = require('body-parser')
 app.use(bodyParser.json())
 app.use(express.json())
 app.post('/api/upload_csv', (req,res) => {
-	filename = "file"
+	filename = req.body.filename.replace(/\.[^/.]+$/, "")
+	filename = findUniqueFilename(filename, 0)
 	csvFilePath = CSV_FILESTORE_PATH + filename + ".csv"
+	mkdirp(CSV_FILESTORE_PATH)
 	jsonFilePath = JSON_FILESTORE_PATH + filename + ".json"
+	mkdirp(JSON_FILESTORE_PATH)
 	csvHeader = req.body.columns
 	csvData = req.body.data
 
@@ -40,9 +43,17 @@ app.post('/api/upload_csv', (req,res) => {
 	})
 })
 
+function findUniqueFilename(filename, version) {
+	const newFilename = filename + version.toString()
+	const csvFilePath = CSV_FILESTORE_PATH + newFilename + ".csv"
+	if(!fs.existsSync(csvFilePath)){
+		return newFilename
+	}
+	return findUniqueFilename(filename, version+1)
+}
+
 function writeCSV(csvFilePath, csvHeader, csvData) {
 	return new Promise((resolve, reject) => {
-		mkdirp(CSV_FILESTORE_PATH)
 		let writeStream = fs.createWriteStream(csvFilePath)
 		writeStream.once('open', () => {
 			headerString = csvHeader.join(',') + '\n'
@@ -133,21 +144,20 @@ app.get('/api/get_file_list', (req,res) => {
 			throw(err)
 			res.sendStatus(500).json(err)
 		}
-		console.log(files)
 		//return 3 most recent
 		files.sort(function(a, b) {
                return fs.statSync(JSON_FILESTORE_PATH + a).mtime.getTime() - 
                       fs.statSync(JSON_FILESTORE_PATH + b).mtime.getTime();
            });
 		res.send({
-			fileList: files.slice(0,3)
+			fileList: files.slice(0,3).map((file) => {return file.replace(/\.[^/.]+$/, "")})
 		})
 	})
 })
 
 app.post('/api/get_file', (req,res) => {
 	filename = req.body.filename
-	filePath = JSON_FILESTORE_PATH + filename
+	filePath = JSON_FILESTORE_PATH + filename + ".json"
 	console.log(filePath)
 	fs.createReadStream(filePath)
 		.pipe(res)
