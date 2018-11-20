@@ -122,13 +122,19 @@ export default class Upload extends React.Component {
 			})
 		})
 		.then(response => {
-			// if(response.status == 200){
-			// 	this.props.history.push({
-			// 		pathname: '/home'
-			// 	})
-			// }
+			if(response.status === 200){
+				this.props.history.push({
+					pathname: '/home'
+				})
+			}
 		})
-	}
+	};
+
+	handleCancel = () => {
+		this.props.history.push({
+			pathname: '/home'
+		})
+	};
 
 	render() {
 
@@ -143,6 +149,7 @@ export default class Upload extends React.Component {
 						onChangeColumn={this.onChangeColumn}
 					/>
 					<button onClick={this.handleSubmitChanges}>OK</button>
+					<button onClick={this.handleCancel}>Cancel</button>
 				</div>
 			)
 		}

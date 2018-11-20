@@ -18,9 +18,30 @@ app.use(express.json())
 app.post('/api/upload_csv', (req,res) => {
 	filename = "file"
 	csvFilePath = CSV_FILESTORE_PATH + filename + ".csv"
+	jsonFilePath = JSON_FILESTORE_PATH + filename + ".json"
 	csvHeader = req.body.columns
 	csvData = req.body.data
-	try {
+
+	writeCSV(csvFilePath,csvHeader,csvData)
+	.then(() => {
+		return convCSV2JSON(csvFilePath, jsonFilePath)
+	})
+	.then(() => readJSONnoPos(jsonFilePath))
+	.then((obj) => addPos(obj))
+	.then((withPos) => writeJSONwithPos(withPos,jsonFilePath))
+	.then(() => {
+		res.send({
+			filename: filename
+		})
+	})
+	.catch((err) => {
+		console.log(err)
+		return res.sendStatus(500).json(err)
+	})
+})
+
+function writeCSV(csvFilePath, csvHeader, csvData) {
+	return new Promise((resolve, reject) => {
 		mkdirp(CSV_FILESTORE_PATH)
 		let writeStream = fs.createWriteStream(csvFilePath)
 		writeStream.once('open', () => {
@@ -34,15 +55,13 @@ app.post('/api/upload_csv', (req,res) => {
 				writeStream.write(rowString)
 			})
 			writeStream.end();
+			return (resolve(null))
 		})
-	} catch(err) {
-		return res.sendStatus(500).json(err)
-	}
-	saveJSONwithPos(filename)
-	res.send({
-		filename: filename
+		writeStream.on('error', (err) => {
+			return (reject(err))
+		})
 	})
-})
+}
 
 const googleMapsClient = require('@google/maps').createClient({
 	key: process.env.GOOGLE_MAPS_API_KEY,
@@ -70,43 +89,41 @@ function convCSV2JSON(csvFilePath, jsonFilePath){
 	})
 }
 
-function saveJSONwithPos(filename) {
-	const csvFilePath = CSV_FILESTORE_PATH + filename + ".csv"
-	const jsonFilePath = JSON_FILESTORE_PATH + filename + ".json"
-	try{
-		mkdirp(JSON_FILESTORE_PATH)
-		convCSV2JSON(csvFilePath,jsonFilePath)
-			.then(
-				() => {
-					var obj = JSON.parse(fs.readFileSync(jsonFilePath,'utf8'))
-					return(obj)
-				}
-			)
-			.then(
-				(obj) => {
-					const geocodePromises = obj.map(_geocodeAddressPos)
-					Promise.all(geocodePromises)
-						.then((withPos) => {
-							var withPosStr = JSON.stringify(withPos)
-							fs.writeFile(
-								jsonFilePath,
-								withPosStr,
-								'utf8',
-								(err) => {
-									if(err){throw err} 
-									console.log("saved JSON with Positions")
-								}
-							)
-						})
-				}
-			)
-			.catch(err => {
-				console.log(err)
-			})
-	}
-	catch(e){
-		console.error(e)
-	}
+function readJSONnoPos(jsonFilePath) {
+	return new Promise((resolve,reject) => {
+		try {
+			let data = fs.readFileSync(jsonFilePath, 'utf8')
+			data = JSON.parse(data)
+			return resolve(data)
+		} catch(err) {
+			return reject(err)
+		}
+	})
+}
+
+function addPos(obj) {
+	return new Promise((resolve, reject) => {
+		const geocodePromises = obj.map(_geocodeAddressPos)
+		Promise
+			.all(geocodePromises)
+			.then(() => resolve(obj))
+			.catch((err) => reject(err))
+	})
+}
+
+function writeJSONwithPos(withPos, jsonFilePath) {
+	return new Promise((resolve,reject) => {
+		fs.writeFile(
+			jsonFilePath,
+			JSON.stringify(withPos),
+			'utf8',
+			(err) => {
+				if(err){reject(err)} 
+				console.log("saved JSON with Pos")
+				resolve("writeFile fin")
+			}
+		)
+	})
 }
 
 app.get('/api/get_file_list', (req,res) => {
