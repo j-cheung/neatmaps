@@ -1,8 +1,63 @@
 .uploadWrapper {
   	background-color: #333;
-	height: 100vh;
+	height: 150vh;
 	width: 100%;
 	position: fixed;
 	top: 0;
 	left: 0;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.uploadHeader {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-around;
+	align-items: center;
+	height: 10vh;
+	width: 100%;
+	position: relative;
+}
+
+.uploadTitle {
+	color: #fff;
+	width: 40%;
+	font-size: 36px;
+	font-family: "Helvetica Neue"
+}
+
+.uploadCancelBtn {
+	background-color: #fff;
+	height: 30%;
+	width: 10%;
+	border: 0;
+}
+
+.uploadCsvInput {
+	color: #fff;
+	width: 10%;
+}
+
+.uploadViewAndSubmit {
+	padding-top: 5vh;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width: 90%;
+}
+
+.uploadTable {
+	width: 100%;
+	color: #fff;
+	text-align: center;
+}
+
+.uploadSubmitBtn {
+	position: relative;
+	top: 5vh;
+	background-color: #fff;
+	height: 5vh;
+	width: 10%;
+	border: 0;
 }

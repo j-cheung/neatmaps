@@ -160,7 +160,8 @@ export default class Home extends React.Component {
 
 	showMarkers = (gmap) => {
 		const icons = [
-			'red','green','blue','yellow','orange','purple','lightblue'
+			'red','green','blue','yellow','orange','purple','lightblue',
+			'red-dot','green-dot','blue-dot','yellow-dot','orange-dot','purple-dot','lightblue'
 		];
 		console.log(this.state.groupedData)
 		const groupedData = this.state.groupedData
@@ -173,7 +174,7 @@ export default class Home extends React.Component {
 					const marker = new window.google.maps.Marker({
 						position: member.POSITION,
 						map: gmap,
-						icon: 'http://maps.google.com/mapfiles/ms/icons/' + icons[groupIndex] + '-dot.png'
+						icon: 'http://maps.google.com/mapfiles/ms/icons/' + icons[groupIndex] + '.png'
 					})
 				}
 			)

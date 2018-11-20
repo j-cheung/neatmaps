@@ -44,32 +44,35 @@ class SelectColumnHeader extends React.Component {
 	}
 }
 
-class CSVTableView extends React.Component {
+class CSVTableViewAndSubmit extends React.Component {
 
 	render() {
 		const tableData = this.props.tableData
 		return (
-			<table className="uploadTable">
-				<SelectColumnHeader 
-						columnHeaders={this.props.columnHeaders} 
-						onChangeColumn={this.props.onChangeColumn}
-				/>
-				<tbody>
-					{tableData.map(
-						(tableRow, index0) => {
-							return(
-								<tr key={index0}>
-									{tableRow.map(
-											(tableCell, index1) => {
-												return (<td key={index0 + "." + index1}>{tableCell}</td>)
-											}
-									)}
-								</tr>
-							)
-						}
-					)}
-				</tbody>
-			</table>
+			<div className="uploadViewAndSubmit">
+				<table className="uploadTable">
+					<SelectColumnHeader 
+							columnHeaders={this.props.columnHeaders} 
+							onChangeColumn={this.props.onChangeColumn}
+					/>
+					<tbody>
+						{tableData.map(
+							(tableRow, index0) => {
+								return(
+									<tr key={index0}>
+										{tableRow.map(
+												(tableCell, index1) => {
+													return (<td key={index0 + "." + index1}>{tableCell}</td>)
+												}
+										)}
+									</tr>
+								)
+							}
+						)}
+					</tbody>
+				</table>
+				<button className="uploadSubmitBtn" onClick={this.props.handleSubmitChanges}>OK</button>
+			</div>
 		)
 	}
 }
@@ -105,11 +108,10 @@ export default class Upload extends React.Component {
 	handleSubmitChanges = () => {
 		//validate selections
 		const columnHeaders = this.state.columnHeaders
-		const origArray = this.state.csvArray
-		// const withHeaders = [columnHeaders].concat(origArray)
 		this.setState({
 			headersSelected: true
 		})
+		const origArray = this.state.csvArray
 		fetch('/api/upload_csv', {
 			method: 'POST',
 			headers: {
@@ -137,27 +139,46 @@ export default class Upload extends React.Component {
 	};
 
 	render() {
+		// let showCSV = 
+		// )
+		// if(this.state.csvArray && this.state.csvArray.length > 0){
 
-		if(this.state.csvArray && this.state.csvArray.length > 0){
-			return (
-				<div className="uploadWrapper">
-					<h1> UPLOAD FILE </h1>
-					<Reader onFileLoaded={this.onFileLoaded}/>
-					<CSVTableView 
-						tableData={this.state.csvArray} 
-						columnHeaders={this.state.columnHeaders} 
-						onChangeColumn={this.onChangeColumn}
-					/>
-					<button onClick={this.handleSubmitChanges}>OK</button>
-					<button onClick={this.handleCancel}>Cancel</button>
-				</div>
-			)
-		}
+		// 	return (
+		// 		<div className="uploadWrapper">
+		// 			<h1> UPLOAD FILE </h1>
+		// 			<button onClick={this.handleCancel}>Cancel</button>
+		// 			<Reader onFileLoaded={this.onFileLoaded}/>
+		// 			<CSVTableView 
+		// 				tableData={this.state.csvArray} 
+		// 				columnHeaders={this.state.columnHeaders} 
+		// 				onChangeColumn={this.onChangeColumn}
+		// 			/>
+		// 			<button onClick={this.handleSubmitChanges}>OK</button>
+		// 		</div>
+		// 	)
+		// }
 
 		return (
 			<div className="uploadWrapper">
-				<h1> UPLOAD FILE </h1>
-				<Reader onFileLoaded={this.onFileLoaded}/>
+				<div className="uploadHeader">
+					<div className="uploadTitle"> UPLOAD FILE </div>
+					<button className="uploadCancelBtn" onClick={this.handleCancel}>Cancel</button>
+				</div>
+				<CSVReader
+					cssClass="uploadCsvInput"
+					onFileLoaded={this.onFileLoaded}
+				/>
+				{(this.state.csvArray && this.state.csvArray.length > 0) ? 
+					(
+						<CSVTableViewAndSubmit
+						tableData={this.state.csvArray} 
+						columnHeaders={this.state.columnHeaders} 
+						onChangeColumn={this.onChangeColumn}
+						handleSubmitChanges={this.handleSubmitChanges}
+						/>
+					)
+					: <React.Fragment></React.Fragment>
+				}
 			</div>
 		)
 	}
