@@ -128,7 +128,7 @@ function writeJSONwithPos(withPos, jsonFilePath) {
 
 app.get('/api/get_file_list', (req,res) => {
 	//return array of filenames in filestore/
-	fs.readdir(FILESTORE_PATH, (err, files) => {
+	fs.readdir(JSON_FILESTORE_PATH, (err, files) => {
 		if(err){
 			throw(err)
 			res.sendStatus(500).json(err)
@@ -141,9 +141,9 @@ app.get('/api/get_file_list', (req,res) => {
 
 app.post('/api/get_file', (req,res) => {
 	filename = req.body.filename
-	filePath = FILESTORE_PATH + filename
+	filePath = JSON_FILESTORE_PATH + filename
+	console.log(filePath)
 	fs.createReadStream(filePath)
-		.pipe(csv2json())
 		.pipe(res)
 })
 

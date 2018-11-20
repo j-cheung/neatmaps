@@ -112,8 +112,21 @@ export default class Home extends React.Component {
 		super(props)
 		this.state = {
 			filename: null,
-			fileData: null
+			groupedData: null
 		}
+	}
+
+	_groupDataByCategory = (data) => {
+		var categories = {}
+		data.map((row) => {
+			if(!categories[row.CATEGORY]){
+				categories[row.CATEGORY] = []
+			}
+			var rowCategory = row.CATEGORY
+			delete row.CATEGORY
+			categories[rowCategory].push(row)
+		})
+		return categories
 	}
 
 	_getFileData = (filename) => {
@@ -129,9 +142,9 @@ export default class Home extends React.Component {
 		})
 		.then(response => response.json())
 		.then(data => {
-			console.log(data)
+			const grouped = this._groupDataByCategory(data)
 			this.setState({
-				fileData: data
+				groupedData: grouped
 			})
 		})
 	};
@@ -145,45 +158,30 @@ export default class Home extends React.Component {
 		this._getFileData(filename)
 	};
 
-	//input: single entry of array, json {(address), (category), (city), (state), (zipcode)}
-	_geocodeAddressPos = (data) => {
-		const geocoder = new window.google.maps.Geocoder()
-		const address = data.ADDRESS + "," + data.CITY + "," + data.STATE + " " + data.ZIPCODE
-		geocoder.geocode({address: address}, function(results, status) {
-			if (status === 'OK') {
-				return results[0].geometry.location
-			} else {
-				console.log("Geocode Unccessful for following entry: " + data)
-				console.log(status)
-			}
+	showMarkers = (gmap) => {
+		const icons = [
+			'red','green','blue','yellow','orange','purple','lightblue'
+		];
+		console.log(this.state.groupedData)
+		const groupedData = this.state.groupedData
+		Object.keys(groupedData).forEach((key, groupIndex) => {
+			console.log(groupedData[key])
+			groupedData[key].map(
+				(member) => {
+					console.log(member)
+					console.log(groupIndex)
+					const marker = new window.google.maps.Marker({
+						position: member.POSITION,
+						map: gmap,
+						icon: 'http://maps.google.com/mapfiles/ms/icons/' + icons[groupIndex] + '-dot.png'
+					})
+				}
+			)
 		})
 	};
 
-	showMarkers = (gmap) => {
-		this.state.fileData.map(
-			(data) => {
-				setTimeout(
-					() => {
-						const marker = new window.google.maps.Marker({
-							position: this._geocodeAddressPos(data),
-							map: gmap
-						})
-					},
-					3000
-				)
-
-				// const marker = new window.google.maps.Marker({
-				// 	position: this._geocodeAddressPos(data),
-				// 	map: gmap
-				// })
-				// setTimeout(function() {}, 300);
-				// return marker
-			}
-		)
-	};
-
 	onMapLoad = (gmap) => {
-		if(this.state.fileData){
+		if(this.state.groupedData){
 			this.showMarkers(gmap)
 		}
 	};
