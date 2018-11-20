@@ -9,6 +9,9 @@ const port = process.env.PORT || 5000
 const FILESTORE_PATH = "./filestore/"
 const CSV_FILESTORE_PATH = FILESTORE_PATH + "csv/"
 const JSON_FILESTORE_PATH = FILESTORE_PATH + "json/"
+mkdirp(FILESTORE_PATH)
+mkdirp(CSV_FILESTORE_PATH)
+mkdirp(JSON_FILESTORE_PATH)
 
 app.listen(port, () => console.log('Listening on port ' + port))
 
@@ -19,9 +22,7 @@ app.post('/api/upload_csv', (req,res) => {
 	filename = req.body.filename.replace(/\.[^/.]+$/, "")
 	filename = findUniqueFilename(filename, 0)
 	csvFilePath = CSV_FILESTORE_PATH + filename + ".csv"
-	mkdirp(CSV_FILESTORE_PATH)
 	jsonFilePath = JSON_FILESTORE_PATH + filename + ".json"
-	mkdirp(JSON_FILESTORE_PATH)
 	csvHeader = req.body.columns
 	csvData = req.body.data
 
@@ -146,8 +147,8 @@ app.get('/api/get_file_list', (req,res) => {
 		}
 		//return 3 most recent
 		files.sort(function(a, b) {
-               return fs.statSync(JSON_FILESTORE_PATH + a).mtime.getTime() - 
-                      fs.statSync(JSON_FILESTORE_PATH + b).mtime.getTime();
+               return fs.statSync(JSON_FILESTORE_PATH + b).mtime.getTime() - 
+                      fs.statSync(JSON_FILESTORE_PATH + a).mtime.getTime();
            });
 		res.send({
 			fileList: files.slice(0,3).map((file) => {return file.replace(/\.[^/.]+$/, "")})
