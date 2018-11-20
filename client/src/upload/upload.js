@@ -1,6 +1,5 @@
 import React from 'react'
 import CSVReader from 'react-csv-reader'
-import { CSVLink, CSVDownload } from 'react-csv'
 import "./upload.css"
 
 class Reader extends React.Component {
@@ -107,7 +106,7 @@ export default class Upload extends React.Component {
 		//validate selections
 		const columnHeaders = this.state.columnHeaders
 		const origArray = this.state.csvArray
-		const withHeaders = [columnHeaders].concat(origArray)
+		// const withHeaders = [columnHeaders].concat(origArray)
 		this.setState({
 			headersSelected: true
 		})
@@ -118,30 +117,20 @@ export default class Upload extends React.Component {
 				'Content-Type': 'application/json',
 			},
 			body: JSON.stringify({
-				data: withHeaders
+				columns: columnHeaders,
+				data: origArray
 			})
 		})
 		.then(response => {
-			console.log(response)
+			// if(response.status == 200){
+			// 	this.props.history.push({
+			// 		pathname: '/home'
+			// 	})
+			// }
 		})
 	}
 
 	render() {
-/*
-		if(this.state.headersSelected){
-			return (
-				<div className="uploadWrapper">
-					<h1> UPLOAD FILE </h1>
-					<Reader onFileLoaded={this.onFileLoaded}/>
-					<CSVTableView 
-						tableData={this.state.csvArray} 
-						columnHeaders={this.state.columnHeaders} 
-						onChangeColumn={this.onChangeColumn}
-					/>
-					<button onClick={this.handleSubmitChanges}>OK</button>
-				</div>
-			)
-		}*/
 
 		if(this.state.csvArray && this.state.csvArray.length > 0){
 			return (

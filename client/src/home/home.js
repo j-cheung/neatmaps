@@ -145,18 +145,48 @@ export default class Home extends React.Component {
 		this._getFileData(filename)
 	};
 
-	showMarkers = (map) => {
-		const marker = new window.google.maps.Marker({
-			position: {lat: 44.5802, lng: -103.4617},
-			map: map
+	//input: single entry of array, json {(address), (category), (city), (state), (zipcode)}
+	_geocodeAddressPos = (data) => {
+		const geocoder = new window.google.maps.Geocoder()
+		const address = data.ADDRESS + "," + data.CITY + "," + data.STATE + " " + data.ZIPCODE
+		geocoder.geocode({address: address}, function(results, status) {
+			if (status === 'OK') {
+				return results[0].geometry.location
+			} else {
+				console.log("Geocode Unccessful for following entry: " + data)
+				console.log(status)
+			}
 		})
 	};
 
-	onMapLoad = (map) => {
+	showMarkers = (gmap) => {
+		this.state.fileData.map(
+			(data) => {
+				setTimeout(
+					() => {
+						const marker = new window.google.maps.Marker({
+							position: this._geocodeAddressPos(data),
+							map: gmap
+						})
+					},
+					3000
+				)
+
+				// const marker = new window.google.maps.Marker({
+				// 	position: this._geocodeAddressPos(data),
+				// 	map: gmap
+				// })
+				// setTimeout(function() {}, 300);
+				// return marker
+			}
+		)
+	};
+
+	onMapLoad = (gmap) => {
 		if(this.state.fileData){
-			this.showMarkers(map)
+			this.showMarkers(gmap)
 		}
-	}
+	};
 
 	render() {
 		console.log("rerender")
