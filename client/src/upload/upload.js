@@ -2,18 +2,6 @@ import React from 'react'
 import CSVReader from 'react-csv-reader'
 import "./upload.css"
 
-class Reader extends React.Component {
-	render() {
-		return (
-			<CSVReader
-				cssClass="fileReader"
-				label="Upload CSV"
-				onFileLoaded={this.props.onFileLoaded}
-			/>
-		)
-	}
-}
-
 class SelectColumnHeader extends React.Component {
 	render() {
 		const indices = [0,1,2,3,4]
@@ -139,25 +127,6 @@ export default class Upload extends React.Component {
 	};
 
 	render() {
-		// let showCSV = 
-		// )
-		// if(this.state.csvArray && this.state.csvArray.length > 0){
-
-		// 	return (
-		// 		<div className="uploadWrapper">
-		// 			<h1> UPLOAD FILE </h1>
-		// 			<button onClick={this.handleCancel}>Cancel</button>
-		// 			<Reader onFileLoaded={this.onFileLoaded}/>
-		// 			<CSVTableView 
-		// 				tableData={this.state.csvArray} 
-		// 				columnHeaders={this.state.columnHeaders} 
-		// 				onChangeColumn={this.onChangeColumn}
-		// 			/>
-		// 			<button onClick={this.handleSubmitChanges}>OK</button>
-		// 		</div>
-		// 	)
-		// }
-
 		return (
 			<div className="uploadWrapper">
 				<div className="uploadHeader">
