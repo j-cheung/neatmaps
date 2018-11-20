@@ -70,17 +70,19 @@ export default class Upload extends React.Component {
 		super(props)
 		this.state={
 			csvArray: [],
+			filename: "",
 			columnHeaders: Array(5).fill(''),
-			headersSelected: false
+			headersSelected: false,
 		}
 	}
 
-	onFileLoaded = (file) => {
-		console.log(file)
+	onFileLoaded = (file, filename) => {
+		console.log(filename)
 		//validate file
 		//if 5 columns
 		this.setState({
-			csvArray: file
+			csvArray: file,
+			filename: filename
 		})
 	};
 
@@ -96,6 +98,14 @@ export default class Upload extends React.Component {
 	handleSubmitChanges = () => {
 		//validate selections
 		const columnHeaders = this.state.columnHeaders
+		if(columnHeaders.includes('')){
+			alert("Please select column headers")
+			return
+		}
+		if([...new Set(columnHeaders)].length !== 5){
+			alert("Please do not duplicate column headers")
+			return 
+		}
 		this.setState({
 			headersSelected: true
 		})
@@ -107,6 +117,7 @@ export default class Upload extends React.Component {
 				'Content-Type': 'application/json',
 			},
 			body: JSON.stringify({
+				filename: this.state.filename,
 				columns: columnHeaders,
 				data: origArray
 			})

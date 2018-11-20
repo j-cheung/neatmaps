@@ -133,8 +133,14 @@ app.get('/api/get_file_list', (req,res) => {
 			throw(err)
 			res.sendStatus(500).json(err)
 		}
+		console.log(files)
+		//return 3 most recent
+		files.sort(function(a, b) {
+               return fs.statSync(JSON_FILESTORE_PATH + a).mtime.getTime() - 
+                      fs.statSync(JSON_FILESTORE_PATH + b).mtime.getTime();
+           });
 		res.send({
-			fileList: files
+			fileList: files.slice(0,3)
 		})
 	})
 })
