@@ -1,5 +1,15 @@
 This web app was built to assess front-end web development skills 
 
+## Prerequisites
+
+### Node.JS
+
+Information: https://github.com/nodejs/node
+
+### npm 
+
+Information: https://github.com/npm/cli 
+
 ## How to run
 
 ### Clone this repository
@@ -10,13 +20,13 @@ git clone https://github.com/j-cheung/neatmaps.git
 
 ### Setup Google Maps API keys
 
-create a new file: /neatmaps/.env
+create a new file: `some/path/neatmaps/.env`
 add the following, with your own Goole Maps API Key
 ```
 GOOGLE_MAPS_API_KEY=[YOUR_API_KEY]
 ```
 
-create another: /neatmaps/client/.env
+create another: `some/path/neatmaps/client/.env`
 ```
 REACT_APP_GOOGLE_MAPS_API_KEY=[YOUR_API_KEY]
 ```
@@ -24,15 +34,18 @@ REACT_APP_GOOGLE_MAPS_API_KEY=[YOUR_API_KEY]
 ### Start Node.js (Express) Server
 
 ```
-cd [path]/neatmaps
+cd neatmaps
+npm install
 npm start
 ```
 Express server will be listening on port 5000 by default
 
 ### Start React
+With a new terminal window,
 
 ```
-cd [path]/neatmaps/client
+cd client
+npm install
 npm start
 ```
 
@@ -41,6 +54,6 @@ The app will be running on http://localhost:3000
 ### To Run Tests
 
 ```
-cd [path]/neatmaps/client
+cd some/path/neatmaps/client
 npm test
 ```
