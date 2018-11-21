@@ -1,4 +1,4 @@
-This web app was built to assess front-end web development skills 
+This web app lets the user upload CSV containing US addresses and view them on a map. 
 
 ## Prerequisites
 
