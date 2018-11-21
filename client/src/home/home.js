@@ -62,10 +62,10 @@ class LoadPrevFiles extends React.Component {
 
 	componentDidMount() {
 		const cookies = new Cookies
-		console.log(cookies.get('token'))
+		console.log(cookies.get('neatmaps-token'))
 		fetch('/api/get_file_list',{
 			headers:{
-				'Authorization': `Bearer ${cookies.get('token')}`
+				'Authorization': `Bearer ${cookies.get('neatmaps-token')}`
 			}
 		})
 		.then(response => response.json())
@@ -143,7 +143,7 @@ export default class Home extends React.Component {
 			headers: {
 				'Accept': 'application/json',
 				'Content-Type': 'application/json',
-				'Authorization': `Bearer ${cookies.get('token')}`
+				'Authorization': `Bearer ${cookies.get('neatmaps-token')}`
 			},
 			body: JSON.stringify({
 				filename: filename
@@ -197,7 +197,6 @@ export default class Home extends React.Component {
 	};
 
 	render() {
-		console.log("rerender")
 		return (
 			<div className="homeWrapper">
 				<GMap

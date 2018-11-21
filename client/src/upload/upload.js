@@ -117,7 +117,7 @@ export default class Upload extends React.Component {
 			headers: {
 				'Accept': 'application/json',
 				'Content-Type': 'application/json',
-				'Authorization': `Bearer ${cookies.get('token')}`
+				'Authorization': `Bearer ${cookies.get('neatmaps-token')}`
 			},
 			body: JSON.stringify({
 				filename: this.state.filename,

@@ -84,8 +84,9 @@ class Login extends React.Component {
 		.then(token => {
 			console.log(token)
 			const cookies = new Cookies()
-			cookies.set('token', token, {path: '/'})
-			console.log(cookies.get('token'))
+			cookies.set('neatmaps-token', token, {path: '/'})
+			console.log(cookies.get('neatmaps-token'))
+			this.props.history.push("/home")
 		})
 		.catch(err => {
 			console.log(err)
@@ -97,8 +98,6 @@ class Login extends React.Component {
 	}
 
 	render () {
-		const cookies = new Cookies()
-		console.log(cookies.get('token'))
 		return (
 			<div className="loginWrapper">
 				<LoginTitle/>
