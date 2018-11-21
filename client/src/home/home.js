@@ -50,7 +50,7 @@ class GMap extends React.Component {
 	}
 }
 //load previously uploaded files if available
-class LoadPrevFiles extends React.Component {
+export class LoadPrevFiles extends React.Component {
 	constructor(props){
 		super(props)
 		this.state = {
@@ -97,7 +97,7 @@ class LoadPrevFiles extends React.Component {
 	}
 }
 
-class HomeOptions extends React.Component {
+export class HomeOptions extends React.Component {
 
 	handleLogout = () => {
 		const cookies = new Cookies()

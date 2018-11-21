@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Home renders 1`] = `
+<div
+  className="homeWrapper"
+>
+  <GMap
+    apiKey="AIzaSyBxiQYwKY6K0TpwI0yD9HGplvUxdJHMY2Y"
+    gmapId="gmap0"
+    onMapLoad={[Function]}
+    options={
+      Object {
+        "center": Object {
+          "lat": 44.5802,
+          "lng": -103.4617,
+        },
+        "zoom": 4,
+      }
+    }
+  />
+  <HomeOptions
+    handleLoadFileClick={[Function]}
+  />
+</div>
+`;

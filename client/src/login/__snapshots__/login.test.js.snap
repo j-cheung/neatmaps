@@ -1,7 +1,14 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Login should render 1`] = `
-<Route>
-  <Component />
-</Route>
+exports[`Login renders LoginTitle and LoginForm 1`] = `
+<div
+  className="loginWrapper"
+>
+  <LoginTitle />
+  <LoginForm
+    handleOnChangeEmail={[Function]}
+    handleOnChangePassword={[Function]}
+    handleSubmit={[Function]}
+  />
+</div>
 `;

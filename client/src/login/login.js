@@ -40,9 +40,34 @@ export default class Login extends React.Component {
 		this.setState({password: e.target.value})
 	};
 
+	getSignJWT = () => {
+		return fetch('/api/sign_jwt',{
+				method: 'POST',
+				headers: {
+					'Accept': 'application/json',
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					username: this.state.email
+				})
+			})
+			.then(res => {
+				if(!res.ok){
+					console.log(res)
+					throw Error(res.status.toString() +" "+ res.statusText)
+				}
+				return res.text()
+			})
+			.catch(err => {console.log(err)})
+	};
+
 	handleSubmit = (event) => {
 		event.preventDefault()
 		//validate, verify
+		if(this.state.email === '' || this.state.password === ''){
+			alert('Please enter credentials')
+			return
+		}
 		var url = new URL('http://neat-mvp-api.herokuapp.com/v1/auth'),
 			params = {
 				email: this.state.email, 
@@ -58,26 +83,7 @@ export default class Login extends React.Component {
 				throw Error(response.status.toString() +" "+ response.statusText)
 			}
 			//sign jwt get token
-			return fetch('/api/sign_jwt',{
-				method: 'POST',
-				headers: {
-					'Accept': 'application/json',
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify({
-					username: this.state.email
-				})
-			})
-			// .then(response => response.json())
-			.then(res => {
-				if(!response.ok){
-					console.log(res)
-					throw Error(res.status.toString() +" "+ res.statusText)
-				}
-				// console.log(res.text())
-				return res.text()
-			})
-			.catch(err => {console.log(err)})
+			return this.getSignJWT()
 		})
 		.then(token => {
 			const cookies = new Cookies()

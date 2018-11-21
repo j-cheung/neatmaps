@@ -1,0 +1,73 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Upload Renders table with uploaded file 1`] = `
+<div
+  className="uploadWrapper"
+>
+  <div
+    className="uploadHeader"
+  >
+    <div
+      className="uploadTitle"
+    >
+       UPLOAD FILE 
+    </div>
+    <button
+      className="uploadCancelBtn"
+      onClick={[Function]}
+    >
+      Cancel
+    </button>
+  </div>
+  <a
+    cssClass="uploadCsvInput"
+    onFileLoaded={[Function]}
+  />
+  <CSVTableViewAndSubmit
+    columnHeaders={
+      Array [
+        "",
+        "",
+        "",
+        "",
+        "",
+      ]
+    }
+    handleSubmitChanges={[Function]}
+    onChangeColumn={[Function]}
+    tableData={
+      Array [
+        "data1",
+        "data2",
+        "data3",
+      ]
+    }
+  />
+</div>
+`;
+
+exports[`Upload Renders without uploaded file 1`] = `
+<div
+  className="uploadWrapper"
+>
+  <div
+    className="uploadHeader"
+  >
+    <div
+      className="uploadTitle"
+    >
+       UPLOAD FILE 
+    </div>
+    <button
+      className="uploadCancelBtn"
+      onClick={[Function]}
+    >
+      Cancel
+    </button>
+  </div>
+  <a
+    cssClass="uploadCsvInput"
+    onFileLoaded={[Function]}
+  />
+</div>
+`;
