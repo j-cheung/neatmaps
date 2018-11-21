@@ -51,6 +51,9 @@ npm start
 
 The app will be running on http://localhost:3000
 
+#### Within the app
+To authenticate users, https://neat-api-docs.herokuapp.com/#authentication is used.
+
 ### To Run Tests
 
 ```
