@@ -1,6 +1,5 @@
 import React from 'react'
 import Cookies from 'universal-cookie'
-import { withRouter } from 'react-router-dom'
 import "./login.css"
 
 const LoginTitle = () => {
@@ -24,7 +23,7 @@ class LoginForm extends React.Component {
 	}
 }
 
-class Login extends React.Component {
+export default class Login extends React.Component {
 	constructor(props){
 		super(props)
 		this.state = {
@@ -103,5 +102,3 @@ class Login extends React.Component {
 		)
 	}
 }
-
-export default withRouter(Login)
