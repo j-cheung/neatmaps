@@ -99,6 +99,12 @@ class LoadPrevFiles extends React.Component {
 }
 
 class HomeOptions extends React.Component {
+
+	handleLogout = () => {
+		const cookies = new Cookies()
+		cookies.remove('neatmaps-token')
+	}
+
 	render() {
 		return (
 			<div className="homeOptionsBar">
@@ -106,7 +112,9 @@ class HomeOptions extends React.Component {
 					Upload
 				</Link>
 				<LoadPrevFiles handleLoadFileClick={this.props.handleLoadFileClick}/>
-				<div className="homeOptionsButton">Logout</div>
+				<Link to="/login" onClick={this.handleLogout} className="homeOptionsButton">
+					Logout
+				</Link>
 			</div>
 		)
 	}
