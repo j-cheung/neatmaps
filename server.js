@@ -3,12 +3,15 @@ const fs = require('fs')
 const csv2json = require('csv2json')
 const mkdirp = require('mkdirp')
 const app = express()
+const jwt = require('jsonwebtoken')
+const expressJWT = require('express-jwt')
 
 require('dotenv').config()
 const port = process.env.PORT || 5000
 const FILESTORE_PATH = "./filestore/"
 const CSV_FILESTORE_PATH = FILESTORE_PATH + "csv/"
 const JSON_FILESTORE_PATH = FILESTORE_PATH + "json/"
+const JWT_KEY = "thisshouldbeasecret"
 mkdirp(FILESTORE_PATH)
 mkdirp(CSV_FILESTORE_PATH)
 mkdirp(JSON_FILESTORE_PATH)
@@ -18,7 +21,9 @@ app.listen(port, () => console.log('Listening on port ' + port))
 const bodyParser = require('body-parser')
 app.use(bodyParser.json())
 app.use(express.json())
-app.post('/api/upload_csv', (req,res) => {
+app.post('/api/upload_csv', 
+	expressJWT({secret: JWT_KEY}),
+	(req,res) => {
 	filename = req.body.filename.replace(/\.[^/.]+$/, "")
 	filename = findUniqueFilename(filename, 0)
 	csvFilePath = CSV_FILESTORE_PATH + filename + ".csv"
@@ -138,7 +143,9 @@ function writeJSONwithPos(withPos, jsonFilePath) {
 	})
 }
 
-app.get('/api/get_file_list', (req,res) => {
+app.get('/api/get_file_list', 
+	expressJWT({secret: JWT_KEY}),
+	(req,res) => {
 	//return array of filenames in filestore/
 	fs.readdir(JSON_FILESTORE_PATH, (err, files) => {
 		if(err){
@@ -156,11 +163,31 @@ app.get('/api/get_file_list', (req,res) => {
 	})
 })
 
-app.post('/api/get_file', (req,res) => {
+app.post('/api/get_file', 
+	expressJWT({secret: JWT_KEY}),
+	(req,res) => {
 	filename = req.body.filename
 	filePath = JSON_FILESTORE_PATH + filename + ".json"
 	console.log(filePath)
 	fs.createReadStream(filePath)
 		.pipe(res)
+})
+
+app.post('/api/sign_jwt', (req,res) => {
+	if(req.body.username){
+		username = req.body.username
+		key = JWT_KEY
+		token = jwt.sign({username: username},key)
+		res.status(200).send(token)
+	} 
+	else{
+		res.status(500).send('ERROR')
+	}
+})
+
+app.post('/api/verify_jwt', 
+	expressJWT({secret: JWT_KEY}),
+	(req,res) => {
+		res.sendStatus(200);
 })
 

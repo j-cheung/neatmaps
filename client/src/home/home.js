@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import Cookies from 'universal-cookie'
 import "./home.css"
 
 //https://cuneyt.aliustaoglu.biz/en/using-google-maps-in-react-without-custom-libraries/
@@ -60,7 +61,13 @@ class LoadPrevFiles extends React.Component {
 	}
 
 	componentDidMount() {
-		fetch('/api/get_file_list')
+		const cookies = new Cookies
+		console.log(cookies.get('token'))
+		fetch('/api/get_file_list',{
+			headers:{
+				'Authorization': `Bearer ${cookies.get('token')}`
+			}
+		})
 		.then(response => response.json())
 		.then(data => {
 				this.setState({
@@ -130,11 +137,13 @@ export default class Home extends React.Component {
 	}
 
 	_getFileData = (filename) => {
+		const cookies = new Cookies()
 		fetch('/api/get_file', {
 			method: 'POST',
 			headers: {
 				'Accept': 'application/json',
 				'Content-Type': 'application/json',
+				'Authorization': `Bearer ${cookies.get('token')}`
 			},
 			body: JSON.stringify({
 				filename: filename

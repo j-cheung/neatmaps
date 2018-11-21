@@ -1,5 +1,6 @@
 import React from 'react'
 import CSVReader from 'react-csv-reader'
+import Cookies from 'universal-cookie'
 import "./upload.css"
 
 class SelectColumnHeader extends React.Component {
@@ -110,11 +111,13 @@ export default class Upload extends React.Component {
 			headersSelected: true
 		})
 		const origArray = this.state.csvArray
+		const cookies = new Cookies()
 		fetch('/api/upload_csv', {
 			method: 'POST',
 			headers: {
 				'Accept': 'application/json',
 				'Content-Type': 'application/json',
+				'Authorization': `Bearer ${cookies.get('token')}`
 			},
 			body: JSON.stringify({
 				filename: this.state.filename,
