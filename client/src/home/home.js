@@ -60,7 +60,6 @@ class LoadPrevFiles extends React.Component {
 
 	componentDidMount() {
 		const cookies = new Cookies
-		console.log(cookies.get('neatmaps-token'))
 		fetch('/api/get_file_list',{
 			headers:{
 				'Authorization': `Bearer ${cookies.get('neatmaps-token')}`
@@ -188,7 +187,6 @@ export default class Home extends React.Component {
 			'red-dot','green-dot','blue-dot','yellow-dot','orange-dot','purple-dot','lightblue'
 		];
 		Object.keys(groupedData).forEach((key, groupIndex) => {
-			console.log(groupedData[key])
 			groupedData[key].map(
 				(member) => {
 					const marker = new window.google.maps.Marker({

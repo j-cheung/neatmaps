@@ -39,7 +39,7 @@ class Login extends React.Component {
 
 	handleOnChangePassword = (e) => {
 		this.setState({password: e.target.value})
-	}
+	};
 
 	handleSubmit = (event) => {
 		event.preventDefault()
@@ -79,22 +79,15 @@ class Login extends React.Component {
 				return res.text()
 			})
 			.catch(err => {console.log(err)})
-
 		})
 		.then(token => {
-			console.log(token)
 			const cookies = new Cookies()
 			cookies.set('neatmaps-token', token, {path: '/'})
-			console.log(cookies.get('neatmaps-token'))
 			this.props.history.push("/home")
 		})
 		.catch(err => {
 			console.log(err)
 		})
-		//........
-		//if success
-		//launch app
-		// this.props.history.push("/home")
 	}
 
 	render () {
