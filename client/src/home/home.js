@@ -49,8 +49,6 @@ class GMap extends React.Component {
 		)
 	}
 }
-
-
 //load previously uploaded files if available
 class LoadPrevFiles extends React.Component {
 	constructor(props){
@@ -119,9 +117,10 @@ export default class Home extends React.Component {
 		super(props)
 		this.state = {
 			filename: null,
-			groupedData: null
+			groupedData: null,
+			markers: []
 		}
-	}
+	};
 
 	_groupDataByCategory = (data) => {
 		var categories = {}
@@ -134,7 +133,7 @@ export default class Home extends React.Component {
 			categories[rowCategory].push(row)
 		})
 		return categories
-	}
+	};
 
 	_getFileData = (filename) => {
 		const cookies = new Cookies()
@@ -151,47 +150,57 @@ export default class Home extends React.Component {
 		})
 		.then(response => response.json())
 		.then(data => {
-			const grouped = this._groupDataByCategory(data)
+			return this._groupDataByCategory(data)
+		})
+		.then(grouped => {
+			const markers = this.addMarkers(grouped)
 			this.setState({
-				groupedData: grouped
+				groupedData: grouped,
+				markers: markers
 			})
 		})
 	};
 
 	//add overlay
 	handleLoadFileClick = (filename) => {
+		//clear markers 
+		this.state.markers.map((marker) => {marker.setMap(null)})
 		//get file => array of locations
 		this.setState({
-			filename: filename
+			filename: filename,
+			markers: []
 		})
 		this._getFileData(filename)
 	};
 
-	showMarkers = (gmap) => {
+	addMarkers = (groupedData) => {
+		const markers = []
 		const icons = [
 			'red','green','blue','yellow','orange','purple','lightblue',
 			'red-dot','green-dot','blue-dot','yellow-dot','orange-dot','purple-dot','lightblue'
 		];
-		console.log(this.state.groupedData)
-		const groupedData = this.state.groupedData
 		Object.keys(groupedData).forEach((key, groupIndex) => {
 			console.log(groupedData[key])
 			groupedData[key].map(
 				(member) => {
-					console.log(member)
-					console.log(groupIndex)
 					const marker = new window.google.maps.Marker({
 						position: member.POSITION,
-						map: gmap,
+						map: null,
 						icon: 'http://maps.google.com/mapfiles/ms/icons/' + icons[groupIndex] + '.png'
 					})
+					markers.push(marker)
 				}
 			)
 		})
+		return markers
+	};
+
+	showMarkers = (gmap) => {
+		this.state.markers.map((marker) => marker.setMap(gmap))
 	};
 
 	onMapLoad = (gmap) => {
-		if(this.state.groupedData){
+		if(this.state.groupedData && this.state.markers.length > 0){
 			this.showMarkers(gmap)
 		}
 	};
